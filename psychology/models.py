@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 # Create your models here.
@@ -20,7 +21,7 @@ class Test(models.Model):
         max_length=5, choices=TYPE_CHOICES
     )
     price = models.CharField(max_length=255)
-    answers = models.TextField(null=True)
+    answers = models.JSONField(null=True)
     image = models.TextField(null=True)
     tags = models.CharField(max_length=255)
     viewCount = models.IntegerField(default=0)
@@ -41,24 +42,35 @@ class TestQuestion(models.Model):
     number = models.PositiveIntegerField()
     question = models.TextField()
     numberOfAnswer = models.PositiveIntegerField()
-    answers = models.TextField(null=True)
+    answers = models.JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
-# class TestUserStatus(models.Model):
-#     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='user_status')
-#     #user_id
-#     #status
-#     result = models.TextField(null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
+class TestUserStatus(models.Model):
+    STATUS_NOTSTART = 'N'
+    STATUS_GETSTART = 'G'
+    STATUS_SUBMITTED = 'S'
 
-# class TestUserAnswer(models.Model):
-#     question = models.ForeignKey(TestQuestion, on_delete=models.CASCADE, related_name='user_answers')
-#     user_choice = models.PositiveIntegerField()
-#     #user_id
-#     created_at = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = [
+        (STATUS_NOTSTART, 'not started'),
+        (STATUS_GETSTART, 'get strated'),
+        (STATUS_SUBMITTED, 'submitted'),
+    ]
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='user_status')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=5, choices=STATUS_CHOICES, default=STATUS_NOTSTART
+    )
+    result = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class TestUserAnswer(models.Model):
+    question = models.ForeignKey(TestQuestion, on_delete=models.CASCADE, related_name='user_answers')
+    user_choice = models.PositiveIntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 
