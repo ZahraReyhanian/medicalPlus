@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('psychology/', include('psychology.urls')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
+    path('api/', include('core.urls')),
+    path('tinymce/', include('tinymce.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

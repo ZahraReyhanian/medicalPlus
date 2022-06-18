@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from tinymce.models import HTMLField
 
 # Create your models here.
 class Test(models.Model):
@@ -15,7 +16,7 @@ class Test(models.Model):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField()
-    description = models.TextField()
+    description = HTMLField(blank=True)
     questions = models.IntegerField()
     type = models.CharField(
         max_length=5, choices=TYPE_CHOICES
