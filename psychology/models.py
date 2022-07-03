@@ -16,14 +16,16 @@ class Test(models.Model):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField()
-    description = HTMLField(blank=True)
+    body = HTMLField(blank=True)
+    description = models.TextField(null=True)
     questions = models.IntegerField()
     type = models.CharField(
         max_length=5, choices=TYPE_CHOICES
     )
+    time = models.IntegerField(default=3)
     price = models.CharField(max_length=255)
     answers = models.JSONField(null=True)
-    image = models.TextField(null=True)
+    image = models.ImageField(upload_to='psychology/images/tests')
     tags = models.CharField(max_length=255)
     viewCount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
