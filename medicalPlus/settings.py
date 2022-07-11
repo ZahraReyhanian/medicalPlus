@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'debug_toolbar',
     'tinymce',
+    'article',
     'psychology',
     'core',
 ]
