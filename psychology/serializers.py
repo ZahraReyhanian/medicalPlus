@@ -1,5 +1,4 @@
 from rest_framework import serializers
-import json
 from .models import Test, TestQuestion
 
 class TestSerializer(serializers.ModelSerializer):
