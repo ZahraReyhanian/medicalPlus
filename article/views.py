@@ -13,7 +13,7 @@ class ArticleViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET'], permission_classes=[])
     def earliest(self, request):
-        articles = Article.objects.select_related('user').order_by('-updated_at').all()[:3]
+        articles = Article.objects.select_related('user').order_by('-created_at').all()[:3]
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
