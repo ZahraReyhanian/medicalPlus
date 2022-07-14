@@ -24,13 +24,13 @@ class Test(models.Model):
         max_length=5, choices=TYPE_CHOICES
     )
     time = models.IntegerField(default=3)
-    price = models.CharField(max_length=255)
+    price = models.CharField(max_length=255, default=0)
     answers = models.JSONField(null=True, blank=True)
     image = models.ImageField(upload_to='psychology/images/tests', null=True)
     tags = models.CharField(max_length=255)
     viewCount = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self) -> str:
         return self.title
@@ -55,8 +55,8 @@ class TestQuestion(models.Model):
     question = models.TextField()
     numberOfAnswer = models.PositiveIntegerField()
     answers = models.JSONField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
 
 class TestUserStatus(models.Model):
@@ -75,14 +75,15 @@ class TestUserStatus(models.Model):
         max_length=5, choices=STATUS_CHOICES, default=STATUS_NOTSTART
     )
     result = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
 class TestUserAnswer(models.Model):
     question = models.ForeignKey(TestQuestion, on_delete=models.CASCADE, related_name='user_answers')
     user_choice = models.PositiveIntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
 
 

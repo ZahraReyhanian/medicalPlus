@@ -15,8 +15,8 @@ class Article(models.Model):
     image = models.ImageField(upload_to='article/images', null=True)
     viewCount = models.IntegerField(default=0)
     commentCount = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         get_latest_by = ['updated_at']
