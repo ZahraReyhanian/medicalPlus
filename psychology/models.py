@@ -1,3 +1,5 @@
+import re
+from django.template.defaultfilters import truncatechars
 from django.conf import settings
 from django.db import models
 from tinymce.models import HTMLField
@@ -17,15 +19,14 @@ class Test(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     body = HTMLField(blank=True)
-    description = models.TextField(null=True)
     questions = models.IntegerField()
     type = models.CharField(
         max_length=5, choices=TYPE_CHOICES
     )
     time = models.IntegerField(default=3)
     price = models.CharField(max_length=255)
-    answers = models.JSONField(null=True)
-    image = models.ImageField(upload_to='psychology/images/tests')
+    answers = models.JSONField(null=True, blank=True)
+    image = models.ImageField(upload_to='psychology/images/tests', null=True)
     tags = models.CharField(max_length=255)
     viewCount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,13 +35,18 @@ class Test(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    @property
+    def description(self):
+        text = re.sub('<[^<]+?>|\r|\n|&[a-zA-Z;]*', '', self.body)
+        return truncatechars(text, 100)
+
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='testresults')
     result = models.TextField()
     grade = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
 
 class TestQuestion(models.Model):

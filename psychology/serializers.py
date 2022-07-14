@@ -1,11 +1,19 @@
 from rest_framework import serializers
-from .models import Test, TestQuestion
+from .models import Test, TestQuestion, TestResult
+
+class TestResultSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TestResult
+        fields = ['result', 'grade', 'test']
+
+
 
 class TestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'slug', 'title', 'description', 'slug', 'questions', 'type', 'answers', 'tags']
+        fields = ['id', 'slug', 'title', 'image','description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
