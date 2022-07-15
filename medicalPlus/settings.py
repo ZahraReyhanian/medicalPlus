@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'tinymce',
     'article',
     'psychology',
+    'disease'
     'core',
 ]
 

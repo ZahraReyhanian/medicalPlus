@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from .serializers import ResultSerializer, TestQuestionSerializer, TestResultSerializer, TestSerializer
+from .serializers import ResultSerializer, TestQuestionSerializer, TestSerializer
 from .pagination import DefaultPagination
 from .models import Test, TestResult
 
@@ -14,6 +14,9 @@ class TestViewSet(ModelViewSet):
     serializer_class = TestSerializer
     pagination_class = DefaultPagination
 
+    #todo save user status
+    #todo update viewCount
+
     @action(detail=True, methods=['GET'], permission_classes=[IsAuthenticated])
     def questions(self, request, pk):
         test = Test.objects.filter(pk=pk).get()
@@ -22,8 +25,8 @@ class TestViewSet(ModelViewSet):
 
     @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
     def questionsresult(self, request, pk):
+        #todo update user result
         result = request.data["result"]
         testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
-        print(testresult)
         serializer = ResultSerializer(testresult)
         return Response(serializer.data)
