@@ -78,12 +78,6 @@ class TestUserStatus(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-class TestUserAnswer(models.Model):
-    question = models.ForeignKey(TestQuestion, on_delete=models.CASCADE, related_name='user_answers')
-    user_choice = models.PositiveIntegerField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
 
 
 

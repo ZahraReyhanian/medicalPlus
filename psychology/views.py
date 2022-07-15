@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from .serializers import TestQuestionSerializer, TestSerializer
+from .serializers import ResultSerializer, TestQuestionSerializer, TestResultSerializer, TestSerializer
 from .pagination import DefaultPagination
-from .models import Test
+from .models import Test, TestResult
 
 # Create your views here.
 class TestViewSet(ModelViewSet):
@@ -18,4 +18,12 @@ class TestViewSet(ModelViewSet):
     def questions(self, request, pk):
         test = Test.objects.filter(pk=pk).get()
         serializer = TestQuestionSerializer(test)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
+    def questionsresult(self, request, pk):
+        result = request.data["result"]
+        testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
+        print(testresult)
+        serializer = ResultSerializer(testresult)
         return Response(serializer.data)

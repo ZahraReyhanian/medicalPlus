@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework import serializers
 from .models import Test, TestQuestion, TestResult
 
@@ -28,4 +29,10 @@ class TestQuestionSerializer(serializers.ModelSerializer):
         model = Test
         fields = ['id', 'slug', 'title', 'slug', 'questions', 'testquestions', 'answers']
 
+
+class ResultSerializer(serializers.ModelSerializer):
+    test = TestSerializer()
+    class Meta:
+        model = TestResult
+        fields = ['result', 'grade', 'test']
 
