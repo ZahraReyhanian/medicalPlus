@@ -26,8 +26,9 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('api/', include('core.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-]
+] 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

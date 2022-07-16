@@ -2,9 +2,12 @@ import json
 from rest_framework import serializers
 from jalali_date import date2jalali, datetime2jalali
 
+from core.serializers import FixAbsolutePathSerializer
+
 from .models import Article
 
 class ArticleSerializer(serializers.ModelSerializer):
+    body = FixAbsolutePathSerializer()
     user = serializers.StringRelatedField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()

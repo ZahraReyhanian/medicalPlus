@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'debug_toolbar',
     'tinymce',
+    'ckeditor',
+    'ckeditor_uploader',
     'article',
     'psychology',
     'disease',
@@ -138,10 +140,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+SEARCH_PATTERN = '/media/uploads/'
+SITE_DOMAIN = "http://127.0.0.1:8000"
+REPLACE_WITH = '%s/media/uploads/' % SITE_DOMAIN
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -198,6 +208,15 @@ JALALI_DATE_DEFAULTS = {
         }
     },
 }
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'extraPlugins': ','.join(['codesnippet']),
+    },
+}
+
+CKEDITOR_RESTRICT_BY_USER = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",

@@ -17,7 +17,7 @@ class Test(models.Model):
     ]
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=50, allow_unicode=True)
     body = HTMLField(blank=True)
     questions = models.IntegerField()
     type = models.CharField(

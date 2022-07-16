@@ -2,16 +2,17 @@ from email.policy import default
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import truncatechars
-from tinymce.models import HTMLField
+# from tinymce.models import HTMLField
+from ckeditor_uploader.fields import RichTextUploadingField
 from jalali_date import datetime2jalali
 import re
 
 class Article(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=50, allow_unicode=True)
     lang = models.CharField(max_length=10, default='fa')
-    body = HTMLField(blank=True)
+    body = RichTextUploadingField()
     image = models.ImageField(upload_to='article/images', null=True)
     viewCount = models.IntegerField(default=0)
     commentCount = models.IntegerField(default=0)
