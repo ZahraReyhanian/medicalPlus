@@ -64,9 +64,21 @@ class SymptomQuestionOption(models.Model):
 
 
 class SymptomFormula(models.Model):
+    GENDER_BOTH = 'B'
+    GENDER_MALE = 'M'
+    GENDER_FEMALE = 'F'
+
+    GENDER_CHOICES = [
+        (GENDER_BOTH, 'both'),
+        (GENDER_MALE, 'male'),
+        (GENDER_FEMALE, 'female'),
+    ]
     symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE, related_name='formulas')
     sum = models.IntegerField()
     result = models.TextField()
+    gender = models.CharField(
+        max_length=5, choices=GENDER_CHOICES, default=GENDER_BOTH
+    )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

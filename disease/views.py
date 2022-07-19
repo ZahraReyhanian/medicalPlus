@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import QuestionSerializer, SymptomQuestionSerializer, SymptomSerializer
-from .models import Symptom, SymptomQuestion
+from .serializers import FormulaSerializer, QuestionSerializer, SymptomQuestionSerializer, SymptomSerializer
+from .models import Symptom, SymptomFormula, SymptomQuestion
 
 # Create your views here.
 class SymptomViewSet(ModelViewSet):
@@ -47,6 +47,32 @@ class SymptomViewSet(ModelViewSet):
         
         serializer = SymptomSerializer(symptoms, many=True)
         return Response(serializer.data)
+
+    
+    def diagnosis_disease(self, formulas, options):
+        results = []
+        for formula in formulas:
+            s = 0
+            for item in formula.options.all():
+                index = str(item.option.id)
+                if index in options:
+                    s += options[index]
+            
+            if(s > formula.sum):
+                results.append(formula.result)
+
+        print(results)
+        return results
+
+    @action(detail=False, methods=['POST'], permission_classes=[])
+    def getresult(self, request):
+        symptom_id = request.data["symptom_id"]
+        options = request.data["options"]
+        formulas = SymptomFormula.objects.filter(symptom_id=symptom_id).prefetch_related('options').all()
+
+        results = self.diagnosis_disease(formulas, options)
+
+        return Response(results)
 
 
 class QuestionViewSet(ModelViewSet):

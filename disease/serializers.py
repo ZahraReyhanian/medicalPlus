@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Symptom, SymptomFormulaOption, SymptomQuestion, SymptomQuestionOption
+from .models import Symptom, SymptomFormula, SymptomFormulaOption, SymptomQuestion, SymptomQuestionOption
 
 class SymptomSerializer(serializers.ModelSerializer):
 
@@ -27,3 +27,16 @@ class SymptomQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symptom
         fields = ['id', 'slug', 'name', 'adult','gender', 'questions']
+
+
+class SymptomFormulaOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SymptomFormulaOption
+        fields = ['option']
+
+class FormulaSerializer(serializers.ModelSerializer):
+    options = SymptomFormulaOptionSerializer(many=True)
+    class Meta:
+        model = SymptomFormula
+        fields = ['id', 'sum', 'result', 'symptom', 'options']
+
