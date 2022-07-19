@@ -65,11 +65,14 @@ class SymptomQuestionOption(models.Model):
 
 class SymptomFormula(models.Model):
     symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE, related_name='formulas')
-    option_diagnose_id = models.JSONField()
     sum = models.IntegerField()
     result = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+class SymptomFormulaOption(models.Model):
+    formula = models.ForeignKey(SymptomFormula, on_delete=models.CASCADE, related_name='options')
+    option = models.ForeignKey(SymptomQuestionOption, on_delete=models.CASCADE)
 
 
 

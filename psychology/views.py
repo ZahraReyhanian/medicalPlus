@@ -4,6 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAdminUser
 from .serializers import ResultSerializer, TestQuestionSerializer, TestSerializer
 from .pagination import DefaultPagination
 from .models import Test, TestResult
@@ -13,6 +14,14 @@ class TestViewSet(ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
     pagination_class = DefaultPagination
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE', 'PUT']:
+            return [IsAdminUser()]
+        
+        # print(self.request.path) # /psychology/tests/4/
+        #todo check prmission to store test
+        return [AllowAny()]
 
     #todo save user status
     #todo update viewCount

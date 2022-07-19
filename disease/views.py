@@ -2,13 +2,26 @@ from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from .serializers import SymptomSerializer
-from .models import Symptom
+from rest_framework.permissions import AllowAny, IsAdminUser
+from .serializers import QuestionSerializer, SymptomQuestionSerializer, SymptomSerializer
+from .models import Symptom, SymptomQuestion
 
 # Create your views here.
 class SymptomViewSet(ModelViewSet):
     queryset = Symptom.objects.all()
     serializer_class = SymptomSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE', 'PUT']:
+            return [IsAdminUser()]
+
+        #todo add permission for creating
+        return [AllowAny()]
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = SymptomQuestionSerializer(instance)
+        return Response(serializer.data)
 
     def set_gender_adult(self, request):
         gender = request.data["gender"]
@@ -34,3 +47,13 @@ class SymptomViewSet(ModelViewSet):
         
         serializer = SymptomSerializer(symptoms, many=True)
         return Response(serializer.data)
+
+
+class QuestionViewSet(ModelViewSet):
+    queryset = SymptomQuestion.objects.all()
+    serializer_class = QuestionSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE', 'PUT', 'POST']:
+            return [IsAdminUser()]
+        return [AllowAny()]
