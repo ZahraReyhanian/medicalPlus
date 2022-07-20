@@ -12,6 +12,19 @@ class ArticleViewSet(ModelViewSet):
 
     pagination_class = DefaultPagination
 
+    def get_serializer_context(self):
+        user_id = 0
+        if self.request.user:
+            user_id = self.request.user.id
+
+        return {
+            'user_id': user_id,
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        }
+        
+
     def get_permissions(self):
         if self.request.method in ['PATCH', 'DELETE', 'PUT']:
             return [IsAdminUser()]
