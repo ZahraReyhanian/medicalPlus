@@ -1,11 +1,15 @@
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserSerializer as BaseUserSerializer, UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer
+
 from rest_framework import serializers
 from django.conf import settings
-class UserCreateSerializer(BaseUserCreateSerializer):    
+class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'username', 'password', 
-        'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
 
+
+class UserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
 
 class FixAbsolutePathSerializer(serializers.Field):
 

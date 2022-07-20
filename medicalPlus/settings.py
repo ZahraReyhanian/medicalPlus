@@ -178,10 +178,10 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'core.User'
 
 DJOSER = {
-    'SERIALIZERS' : {
-        'user_create': 'core.serializers.UserCreateSerializer'
-    },
-    'USER_CREATE_PASSWORD_RETYPE': True
+    "SERIALIZERS": {
+        'user_create': 'core.serializers.UserCreateSerializer',
+        'current_user': 'core.serializers.UserSerializer',
+    }
 }
 
 # default settings
