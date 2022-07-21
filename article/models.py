@@ -37,7 +37,7 @@ class Article(models.Model):
         return datetime2jalali(self.updated_at).strftime('%Y/%m/%dd')
 
 class SaveArticle(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='saves')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     class Meta:
         unique_together = [['article', 'user']]

@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from .pagination import DefaultPagination
-from .serializers import ArticleSerializer
+from .serializers import ArticleSerializer, RetrieveArticleSerializer
 from .models import Article, SaveArticle
 
 class ArticleViewSet(ModelViewSet):
@@ -11,6 +11,11 @@ class ArticleViewSet(ModelViewSet):
     serializer_class = ArticleSerializer
 
     pagination_class = DefaultPagination
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = RetrieveArticleSerializer(instance, context=self.get_serializer_context())
+        return Response(serializer.data)
 
     def get_serializer_context(self):
         user_id = 0
@@ -44,4 +49,11 @@ class ArticleViewSet(ModelViewSet):
         if not created:
             obj.delete()
         return Response("ok")
+
+    @action(detail=False, methods=['GET'], permission_classes=[AllowAny])
+    def saves(self, request):
+        articles = Article.objects.select_related('user').prefetch_related('saves').filter(saves__user_id=request.user.id)
+        serializer = ArticleSerializer(articles, many=True, context=self.get_serializer_context())
+        return Response(serializer.data)
+
 

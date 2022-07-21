@@ -9,7 +9,6 @@ from .models import Article, SaveArticle
 class ArticleSerializer(serializers.ModelSerializer):
     body = FixAbsolutePathSerializer()
     user = serializers.StringRelatedField()
-    saved = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -21,6 +20,14 @@ class ArticleSerializer(serializers.ModelSerializer):
         date = json.dumps(article.get_jalali_updated_at(), default=str)
         return date[1:-2]
 
+    class Meta:
+        model = Article
+        fields = ['id', 'user', 'title', 'slug', 'lang', 'body', 'short_body', 'image', 'viewCount', 'commentCount', 'created_at', 'updated_at']
+
+
+class RetrieveArticleSerializer(ArticleSerializer):
+    saved = serializers.SerializerMethodField()
+    
     def get_saved(self, article: Article):
         user_id = 0
         if 'user_id' in self.context:
@@ -31,6 +38,5 @@ class ArticleSerializer(serializers.ModelSerializer):
         saved = SaveArticle.objects.filter(user_id=user_id, article_id=article.id).count()
         return saved
 
-    class Meta:
-        model = Article
+    class Meta(ArticleSerializer.Meta):
         fields = ['id', 'user', 'title', 'slug', 'lang', 'body', 'short_body', 'image', 'saved','viewCount', 'commentCount', 'created_at', 'updated_at']
