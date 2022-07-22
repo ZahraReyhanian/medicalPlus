@@ -5,7 +5,7 @@ class SymptomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Symptom
-        fields = ['id', 'slug', 'name', 'adult','gender']
+        fields = ['id', 'slug', 'name', 'adult','gender', 'view_count']
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class SymptomQuestionSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
     class Meta:
         model = Symptom
-        fields = ['id', 'slug', 'name', 'adult','gender', 'questions']
+        fields = ['id', 'slug', 'name', 'adult', 'gender', 'view_count', 'questions']
 
 
 class SymptomFormulaOptionSerializer(serializers.ModelSerializer):

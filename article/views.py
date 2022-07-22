@@ -14,6 +14,7 @@ class ArticleViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
+        Article.objects.filter(pk=kwargs['pk']).update(viewCount=instance.viewCount + 1)
         serializer = RetrieveArticleSerializer(instance, context=self.get_serializer_context())
         return Response(serializer.data)
 

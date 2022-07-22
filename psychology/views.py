@@ -26,6 +26,13 @@ class TestViewSet(ModelViewSet):
     #todo save user status
     #todo update viewCount
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        Test.objects.filter(pk=kwargs['pk']).update(viewCount=instance.viewCount + 1)
+        serializer = TestSerializer(instance, context=self.get_serializer_context())
+        return Response(serializer.data)
+    
+
     @action(detail=True, methods=['GET'], permission_classes=[IsAuthenticated])
     def questions(self, request, pk):
         test = Test.objects.filter(pk=pk).get()

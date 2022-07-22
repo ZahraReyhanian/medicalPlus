@@ -5,7 +5,7 @@ class TestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'slug', 'title', 'image','description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags']
+        fields = ['id', 'slug', 'title', 'image', 'viewCount', 'description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class TestQuestionSerializer(serializers.ModelSerializer):
     testquestions = QuestionSerializer(many=True)
     class Meta:
         model = Test
-        fields = ['id', 'slug', 'title', 'slug', 'questions', 'testquestions', 'answers']
+        fields = ['id', 'slug', 'title', 'slug', 'viewCount','questions', 'testquestions', 'answers']
 
 
 class ResultSerializer(serializers.ModelSerializer):

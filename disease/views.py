@@ -20,7 +20,8 @@ class SymptomViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = SymptomQuestionSerializer(instance)
+        Symptom.objects.filter(pk=kwargs['pk']).update(view_count=instance.view_count + 1)
+        serializer = SymptomQuestionSerializer(instance,  context=self.get_serializer_context())
         return Response(serializer.data)
 
     def set_gender_adult(self, request):
