@@ -23,6 +23,15 @@ class UserImageViewSet(ModelViewSet):
         context['user_id'] = self.request.user.id
         return context
 
+    def create(self, request, *args, **kwargs):
+        serializer = UserImageSerializer(
+            data=request.data,
+            context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        profile = serializer.save()
+        serializer = UserImageSerializer(profile, context=self.get_serializer_context())
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 # Create your views here.
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

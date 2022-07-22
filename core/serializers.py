@@ -11,11 +11,6 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
 
 
-class UserSerializer(BaseUserSerializer):
-    class Meta(BaseUserSerializer.Meta):
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
-
-
 class UserImageSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         avatar = self.validated_data['avatar']
@@ -24,14 +19,20 @@ class UserImageSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             UserProfile.objects.filter(user_id=user_id).delete()
             profile = UserProfile.objects.create(user_id=user_id, avatar=avatar)
-
+            print(profile.avatar)
             return profile
 
     class Meta:
         model = UserProfile
         fields = ['avatar']
+class UserSerializer(BaseUserSerializer):
+    profile = UserImageSerializer()
 
-     
+    class Meta(BaseUserSerializer.Meta):
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'profile']
+
+
+
 
 class FixAbsolutePathSerializer(serializers.Field):
 
