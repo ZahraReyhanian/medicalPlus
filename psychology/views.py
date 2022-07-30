@@ -61,7 +61,7 @@ class TestViewSet(ModelViewSet):
 # email = 'email@example.com'  # Optional
 # mobile = '09123456789'  # Optional
 # # Important: need to edit for realy server.
-# CallbackURL = 'http://localhost:8000/psychology/verify/'
+CallbackURL = 'http://localhost:8000/psychology/verify/'
 
 
 def send_request(request):
