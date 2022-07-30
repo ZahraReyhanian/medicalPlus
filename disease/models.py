@@ -22,6 +22,9 @@ class Symptom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    def __str__(self) -> str:
+        return self.name
+
 class SymptomQuestion(models.Model):
     GENDER_BOTH = 'B'
     GENDER_MALE = 'M'
@@ -62,6 +65,9 @@ class SymptomQuestionOption(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    def __str__(self) -> str:
+        return self.option
+
 
 class SymptomFormula(models.Model):
     GENDER_BOTH = 'B'
@@ -82,9 +88,15 @@ class SymptomFormula(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    def __str__(self) -> str:
+        return self.result
+
 class SymptomFormulaOption(models.Model):
     formula = models.ForeignKey(SymptomFormula, on_delete=models.CASCADE, related_name='options')
     option = models.ForeignKey(SymptomQuestionOption, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return str(self.option)
 
 
 

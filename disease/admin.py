@@ -1,20 +1,22 @@
 from django.contrib import admin
 from . import models
 
-
-class SymptomFormulaInline(admin.TabularInline):
-    # autocomplete_fields = ['option']
+class SymptomFormulaOptionInline(admin.StackedInline):
+    model = models.SymptomFormulaOption
     min_num = 1
-    max_num = 10
-    model = models.SymptomFormula
-    extra = 0
+
+@admin.register(models.SymptomFormula)
+class SymptomFormulaInline(admin.ModelAdmin):
+    inlines = [SymptomFormulaOptionInline]
+    list_display = ['id', 'symptom', 'result', 'sum']
+    search_fields = ['symptom']
+    list_display_links = ['id']
 
 @admin.register(models.Symptom)
 class SymptomAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ['name']
     }
-    inlines = [SymptomFormulaInline]
     list_display = ['name', 'adult', 'gender']
     list_editable = ['gender']
     list_display_links = ['name']
