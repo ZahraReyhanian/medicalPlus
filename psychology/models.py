@@ -1,5 +1,6 @@
 import re
 from django.template.defaultfilters import truncatechars
+from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.db import models
 from tinymce.models import HTMLField
@@ -8,12 +9,10 @@ from tinymce.models import HTMLField
 class Test(models.Model):
     TYPE_FREE = 'free'
     TYPE_CASH = 'cash'
-    TYPE_VIP = 'vip'
 
     TYPE_CHOICES = [
         (TYPE_FREE, 'free'),
         (TYPE_CASH, 'cash'),
-        (TYPE_VIP, 'vip'),
     ]
 
     title = models.CharField(max_length=255)
@@ -39,6 +38,11 @@ class Test(models.Model):
     def description(self):
         text = re.sub('<[^<]+?>|\r|\n|&[a-zA-Z;]*', '', self.body)
         return truncatechars(text, 100)
+
+    @property
+    def contentType(self):
+        test_type = ContentType.objects.filter(app_label='psychology', model='test').get();
+        return test_type.id
 
 
 class TestResult(models.Model):

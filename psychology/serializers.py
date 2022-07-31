@@ -5,7 +5,7 @@ class TestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'slug', 'title', 'image', 'viewCount', 'description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags']
+        fields = ['id', 'slug', 'title', 'image', 'viewCount', 'description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags', 'contentType']
 
 
 class QuestionSerializer(serializers.ModelSerializer):

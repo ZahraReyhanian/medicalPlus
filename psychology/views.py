@@ -1,4 +1,6 @@
 from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
+from django.http import HttpResponseNotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -46,3 +48,13 @@ class TestViewSet(ModelViewSet):
         testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
         serializer = ResultSerializer(testresult)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
+    def checkout(self, request, pk):
+        test = Test.objects.filter(pk=pk).get()
+        test_type = ContentType.objects.get_for_model(test)
+        if (test.type != 'free' and not request.user.accessContent(test.id, test_type)):
+            serializer = TestSerializer(test)
+            return Response(serializer.data)
+        else:
+            return HttpResponseNotFound("Not found!")

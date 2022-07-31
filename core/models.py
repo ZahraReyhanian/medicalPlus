@@ -8,6 +8,12 @@ from order.models import Order
 class User(AbstractUser):
     email = models.EmailField(unique=True)
 
+    def accessContent(self, obj_id, obj_type):
+        return UserAccessContent.objects.filter(
+                                    content_type=obj_type, 
+                                    object_id=obj_id,
+                                    user_id=self.id).exists()
+
     def __str__(self) -> str:
         return self.first_name + " " + self.last_name
 
@@ -27,6 +33,6 @@ class UserAccessContent(models.Model):
     content_object = GenericForeignKey()
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    
+
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

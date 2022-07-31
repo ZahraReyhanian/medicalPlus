@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 
+X_API_KEY = "d9d94a3c-377a-4761-9757-a2c48e566b19"
 IDP_API_PAYMENT = "https://api.idpay.ir/v1.1/payment"
 IDP_API_VERIFY = "https://api.idpay.ir/v1.1/payment/verify"
 
@@ -23,7 +24,7 @@ def send_request(request):
     }
     req_header = {"accept": "application/json",
                   "content-type": "application/json",
-                  "X-API-KEY": "d9d94a3c-377a-4761-9757-a2c48e566b19",
+                  "X-API-KEY": X_API_KEY,
                   "X-SANDBOX": "1"}
     req = requests.post(url=IDP_API_PAYMENT, data=json.dumps(
         req_data), headers=req_header)
