@@ -24,6 +24,7 @@ urlpatterns = [
     path('psychology/', include('psychology.urls')),
     path('articles/', include('article.urls')),
     path('disease/', include('disease.urls')),
+    path('order/', include('order.urls')),
     path('auth/', include('djoser.urls')),
     path('api/', include('core.urls')),
     path('tinymce/', include('tinymce.urls')),
