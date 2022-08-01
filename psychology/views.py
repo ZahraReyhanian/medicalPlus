@@ -1,13 +1,13 @@
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseForbidden, HttpResponseNotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser
-
-from .serializers import ResultSerializer, TestQuestionSerializer, TestSerializer
+from rest_framework import status
+from .serializers import ResultSerializer, TestQuestionSerializer, TestSerializer, TestUserSerializer
 from .pagination import DefaultPagination
 from .models import Test, TestResult
 
@@ -28,18 +28,42 @@ class TestViewSet(ModelViewSet):
     #todo save user status
     #todo update viewCount
 
+    def get_serializer_context(self):
+        user_id = 0
+        if self.request.user:
+            user_id = self.request.user.id
+
+        return {
+            'user_id': user_id,
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        }
+
+
+    def hasAccess(self, request, pk):
+        test = Test.objects.filter(pk=pk).get()
+        test_type = ContentType.objects.get_for_model(test)
+        if (test.type != 'free' and not request.user.accessContent(test.id, test_type)):
+            return False
+        return True
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         Test.objects.filter(pk=kwargs['pk']).update(viewCount=instance.viewCount + 1)
+        
         serializer = TestSerializer(instance, context=self.get_serializer_context())
         return Response(serializer.data)
     
 
     @action(detail=True, methods=['GET'], permission_classes=[IsAuthenticated])
     def questions(self, request, pk):
-        test = Test.objects.filter(pk=pk).get()
-        serializer = TestQuestionSerializer(test)
-        return Response(serializer.data)
+        if self.hasAccess(request, pk):
+            test = self.get_object()
+            serializer = TestQuestionSerializer(test)
+            return Response(serializer.data)
+        else:
+            return HttpResponseForbidden("Forbidden!", status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
     def questionsresult(self, request, pk):
@@ -49,12 +73,12 @@ class TestViewSet(ModelViewSet):
         serializer = ResultSerializer(testresult)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['GET'], permission_classes=[IsAuthenticated])
     def checkout(self, request, pk):
-        test = Test.objects.filter(pk=pk).get()
-        test_type = ContentType.objects.get_for_model(test)
-        if (test.type != 'free' and not request.user.accessContent(test.id, test_type)):
-            serializer = TestSerializer(test)
+        if not self.hasAccess(request, pk):
+            context = self.get_serializer_context()
+            context["user_email"] = self.request.user.email
+            serializer = TestUserSerializer(self.get_object(), context=context)
             return Response(serializer.data)
         else:
-            return HttpResponseNotFound("Not found!")
+            return HttpResponseNotFound("Not found!", status=status.HTTP_404_NOT_FOUND)
