@@ -36,8 +36,10 @@ class Order(models.Model):
     refID = models.CharField(max_length=100, null=True)
     link = models.CharField(max_length=200, null=True)
     amount = models.CharField(max_length=255)
+
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

@@ -44,6 +44,11 @@ class Test(models.Model):
         test_type = ContentType.objects.filter(app_label='psychology', model='test').get();
         return test_type.id
 
+    #todo change when deploy
+    @property
+    def redirectLink(self):
+        return f'http://localhost:3000/tests/{self.id}/questions'
+
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='testresults')
