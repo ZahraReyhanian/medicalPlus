@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
@@ -13,6 +13,7 @@ IDP_API_PAYMENT = "https://api.idpay.ir/v1.1/payment"
 IDP_API_VERIFY = "https://api.idpay.ir/v1.1/payment/verify"
 
 CallbackURL = 'http://localhost:8000/order/verify/'
+REDIRECT_URL_ERROR = 'http://localhost:3000/payment/error'
 
 @api_view(['POST'])
 def send_request(request):
@@ -45,16 +46,6 @@ def send_request(request):
     )
 
     return HttpResponse(req)
-    
-    # print(req.json())
-    # if isinstance(req.json()["data"], dict):
-    #     authority = req.json()["data"]["authority"]
-    # if len(req.json()['errors']) == 0:
-    #     return redirect(ZP_API_STARTPAY.format(authority=authority))
-    # else:
-    #     e_code = req.json()['errors']['code']
-    #     e_message = req.json()['errors']['message']
-    #     return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
 @csrf_exempt
 def verify(request):  
@@ -93,29 +84,9 @@ def verify(request):
                 object_id=order.object_id,
             )
             access.save()
-            print(access.content_object.redirectLink)
-            print('******************')
-        
-        
 
+            return redirect(access.content_object.redirectLink)
+        
         return HttpResponse(req)
-        # if len(req.json()['errors']) == 0:
-        #     t_status = req.json()['data']['code']
-        #     if t_status == 100:
-        #         return HttpResponse('Transaction success.\nRefID: ' + str(
-        #             req.json()['data']['ref_id']
-        #         ))
-        #     elif t_status == 101:
-        #         return HttpResponse('Transaction submitted : ' + str(
-        #             req.json()['data']['message']
-        #         ))
-        #     else:
-        #         return HttpResponse('Transaction failed.\nStatus: ' + str(
-        #             req.json()['data']['message']
-        #         ))
-        # else:
-        #     e_code = req.json()['errors']['code']
-        #     e_message = req.json()['errors']['message']
-        #     return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
     else:
-        return HttpResponse('Transaction failed or canceled by user!!!!!!!!')
+        return redirect(REDIRECT_URL_ERROR)
