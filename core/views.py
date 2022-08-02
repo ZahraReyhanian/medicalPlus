@@ -5,10 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import mixins
 from rest_framework import status
 from django.shortcuts import render
-from .models import User, UserProfile
+from django.contrib.admin.options import get_content_type_for_model
+from psychology.serializers import TestSerializer
+from .models import User, UserAccessContent, UserProfile
 from .serializers import UserImageSerializer, UserSerializer
+from psychology.models import Test
 
 
 
@@ -45,3 +49,26 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class UserTestAccessViewSet(mixins.ListModelMixin,
+                            GenericViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TestSerializer
+
+    def get_queryset(self):
+        accesses = UserAccessContent.objects.filter(
+            user_id=self.request.user.id,
+            content_type=get_content_type_for_model(Test)
+        ).only('object_id')
+        access_ids = list(access.object_id for access in accesses)
+        tests = Test.objects.filter(id__in=access_ids)
+        return tests
+
+    def get_serializer_context(self):
+        return {
+            'user_id': self.request.user.id,
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        }
