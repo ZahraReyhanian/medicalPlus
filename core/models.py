@@ -15,7 +15,10 @@ class User(AbstractUser):
                                     user_id=self.id).exists()
 
     def __str__(self) -> str:
-        return self.first_name + " " + self.last_name
+        if self.first_name and self.last_name:
+            return self.first_name + " " + self.last_name
+        else:
+            return self.username
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
