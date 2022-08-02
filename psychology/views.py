@@ -18,15 +18,15 @@ class TestViewSet(ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_permissions(self):
-        if self.request.method in ['PATCH', 'DELETE', 'PUT']:
-            return [IsAdminUser()]
-        
-        # print(self.request.path) # /psychology/tests/4/
-        #todo check prmission to store test
-        return [AllowAny()]
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        elif self.action in ['questionsresult', 'questions', 'checkout']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     #todo save user status
-    #todo update viewCount
 
     def get_serializer_context(self):
         user_id = 0
@@ -67,11 +67,14 @@ class TestViewSet(ModelViewSet):
 
     @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
     def questionsresult(self, request, pk):
-        #todo update user result
-        result = request.data["result"]
-        testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
-        serializer = ResultSerializer(testresult)
-        return Response(serializer.data)
+        if self.hasAccess(request, pk):
+            #todo update user result
+            result = request.data["result"]
+            testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
+            serializer = ResultSerializer(testresult)
+            return Response(serializer.data)
+        else:
+            return HttpResponseForbidden("Forbidden!", status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['GET'], permission_classes=[IsAuthenticated])
     def checkout(self, request, pk):

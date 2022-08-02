@@ -32,11 +32,14 @@ class ArticleViewSet(ModelViewSet):
         
 
     def get_permissions(self):
-        if self.request.method in ['PATCH', 'DELETE', 'PUT']:
-            return [IsAdminUser()]
-        return [AllowAny()]
-
-        #todo set permission for create
+        if self.action in ['list', 'retrieve', 'earliest']:
+            permission_classes = [AllowAny]
+        elif self.action in ['savearticle', 'saves']:
+            permission_classes = IsAuthenticated
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+    
 
     @action(detail=False, methods=['GET'], permission_classes=[AllowAny])
     def earliest(self, request):
@@ -51,7 +54,7 @@ class ArticleViewSet(ModelViewSet):
             obj.delete()
         return Response("ok")
 
-    @action(detail=False, methods=['GET'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated])
     def saves(self, request):
         articles = Article.objects.select_related('user').prefetch_related('saves').filter(saves__user_id=request.user.id)
         serializer = ArticleSerializer(articles, many=True, context=self.get_serializer_context())

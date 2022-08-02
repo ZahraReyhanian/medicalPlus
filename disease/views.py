@@ -12,11 +12,11 @@ class SymptomViewSet(ModelViewSet):
     serializer_class = SymptomSerializer
 
     def get_permissions(self):
-        if self.request.method in ['PATCH', 'DELETE', 'PUT']:
-            return [IsAdminUser()]
-
-        #todo add permission for creating
-        return [AllowAny()]
+        if self.action in ['list', 'retrieve', 'requestsymptom', 'getresult']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
