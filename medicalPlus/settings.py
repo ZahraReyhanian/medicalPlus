@@ -179,10 +179,13 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'core.User'
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': 'http://localhost:3000/reset/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset/{uid}/{token}',
+    # 'ACTIVATION_URL': '/activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL': True,
     "SERIALIZERS": {
         'user_create': 'core.serializers.UserCreateSerializer',
         'current_user': 'core.serializers.UserSerializer',
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmRetypeSerializer'
     }
 }
 
@@ -224,3 +227,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000"
 ]
+
+DOMAIN = 'localhost:3000'
+SITE_NAME = 'Medical Website'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 2525
+DEFAULT_FROM_EMAIL = 'from@medical.com'

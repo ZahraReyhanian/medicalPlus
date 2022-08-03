@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
-from rest_framework.decorators import api_view
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from rest_framework.decorators import api_view
 import requests
 import json
 
@@ -69,24 +70,25 @@ def verify(request):
         
         req = requests.post(url=IDP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
 
-        Order.objects.filter(pk=order_id).update(
-            status=req.json()["status"],
-            track_id=req.json()["payment"]["track_id"]
-        )
-
-        # create access if status = 100
-        if req.json()["status"] == 100:
-            order = Order.objects.filter(pk=order_id).first()
-            access = UserAccessContent(
-                order_id=order.id,
-                user_id=order.user_id,
-                content_type_id=order.content_type_id,
-                object_id=order.object_id,
+        with transaction.atomic():
+            Order.objects.filter(pk=order_id).update(
+                status=req.json()["status"],
+                track_id=req.json()["payment"]["track_id"]
             )
-            access.save()
 
-            return redirect(access.content_object.redirectLink)
-        
+            # create access if status = 100
+            if req.json()["status"] == 100:
+                order = Order.objects.filter(pk=order_id).first()
+                access = UserAccessContent(
+                    order_id=order.id,
+                    user_id=order.user_id,
+                    content_type_id=order.content_type_id,
+                    object_id=order.object_id,
+                )
+                access.save()
+
+                return redirect(access.content_object.redirectLink)
+            
         return HttpResponse(req)
     else:
         return redirect(REDIRECT_URL_ERROR)

@@ -15,7 +15,10 @@ class User(AbstractUser):
                                     user_id=self.id).exists()
 
     def __str__(self) -> str:
-        return self.first_name + " " + self.last_name
+        if self.first_name and self.last_name:
+            return self.first_name + " " + self.last_name
+        else:
+            return self.username
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -36,3 +39,6 @@ class UserAccessContent(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self) -> str:
+        return self.content_object.title

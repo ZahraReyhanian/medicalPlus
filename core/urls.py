@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MyTokenObtainPairView, UserImageViewSet
+from .views import MyTokenObtainPairView, UserImageViewSet, UserTestAccessViewSet
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -9,6 +9,7 @@ from rest_framework_nested import routers
 
 router = routers.DefaultRouter()
 router.register('userprofile', UserImageViewSet, basename='upload_image')
+router.register('useraccesstests', UserTestAccessViewSet, basename='useraccesstests')
 
 
 urlpatterns = [
