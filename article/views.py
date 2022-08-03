@@ -35,7 +35,7 @@ class ArticleViewSet(ModelViewSet):
         if self.action in ['list', 'retrieve', 'earliest']:
             permission_classes = [AllowAny]
         elif self.action in ['savearticle', 'saves']:
-            permission_classes = IsAuthenticated
+            permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
