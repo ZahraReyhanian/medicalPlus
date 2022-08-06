@@ -28,7 +28,6 @@ class TestAdmin(admin.ModelAdmin):
 @admin.register(models.TestQuestion)
 class TestQuestionAdmin(admin.ModelAdmin):
     list_display = ['id', 'question', 'number']
-    list_editable = ['question']
     list_per_page = 20
     search_fields = ['question']
     list_display_links = ['id']
@@ -37,7 +36,8 @@ class TestQuestionAdmin(admin.ModelAdmin):
 @admin.register(models.TestResult)
 class TestResultAdmin(admin.ModelAdmin):
     list_display = ['id', 'test', 'result', 'grade']
-    list_editable = ['result', 'grade']
+    list_editable = ['grade']
+    search_fields = ['test__title', 'result']
     list_display_links = ['id']
     ordering = ['-id']
     list_per_page = 10
