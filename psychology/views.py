@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework import status
 from .serializers import ResultSerializer, TestQuestionSerializer, TestSerializer, TestUserSerializer
 from .pagination import DefaultPagination
-from .models import Test, TestResult
+from .models import Test, TestResult, TestUserStatus
 
 # Create your views here.
 class TestViewSet(ModelViewSet):
@@ -28,6 +28,17 @@ class TestViewSet(ModelViewSet):
 
     #todo save user status
 
+    def hasAccess(self, request, pk):
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_superuser:
+            return True
+        test = Test.objects.filter(pk=pk).get()
+        test_type = ContentType.objects.get_for_model(test)
+        if (test.type != 'free' and not request.user.accessContent(test.id, test_type)):
+            return False
+        return True
+
     def get_serializer_context(self):
         user_id = 0
         if self.request.user:
@@ -41,18 +52,15 @@ class TestViewSet(ModelViewSet):
         }
 
 
-    def hasAccess(self, request, pk):
-        test = Test.objects.filter(pk=pk).get()
-        test_type = ContentType.objects.get_for_model(test)
-        if (test.type != 'free' and not request.user.accessContent(test.id, test_type)):
-            return False
-        return True
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         Test.objects.filter(pk=kwargs['pk']).update(viewCount=instance.viewCount + 1)
         
-        serializer = TestSerializer(instance, context=self.get_serializer_context())
+        context=self.get_serializer_context()
+        context['has_access'] = self.hasAccess(request, kwargs['pk'])
+
+        serializer = TestSerializer(instance, context=context)
         return Response(serializer.data)
     
 
@@ -60,6 +68,7 @@ class TestViewSet(ModelViewSet):
     def questions(self, request, pk):
         if self.hasAccess(request, pk):
             test = self.get_object()
+            TestUserStatus.objects.create(user=request.user, test=test, status=TestUserStatus.STATUS_GETSTART)
             serializer = TestQuestionSerializer(test)
             return Response(serializer.data)
         else:
@@ -68,9 +77,13 @@ class TestViewSet(ModelViewSet):
     @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
     def questionsresult(self, request, pk):
         if self.hasAccess(request, pk):
-            #todo update user result
             result = request.data["result"]
             testresult = TestResult.objects.filter(test_id=pk).filter(Q(grade__gte=result)).order_by('grade').first()
+
+            TestUserStatus.objects.filter(user=request.user, test_id=pk)\
+                                    .update(status=TestUserStatus.STATUS_SUBMITTED,
+                                            result=testresult.result)
+
             serializer = ResultSerializer(testresult)
             return Response(serializer.data)
         else:

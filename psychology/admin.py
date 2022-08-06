@@ -45,7 +45,7 @@ class TestResultAdmin(admin.ModelAdmin):
 
 @admin.register(models.TestUserStatus)
 class TestUserStatusAdmin(admin.ModelAdmin):
-    list_display = ['test', 'user', 'status']
+    list_display = ['test', 'user', 'status', 'result']
     readonly_fields = ['result']
     list_editable = ['status']
     ordering = ['-id']
