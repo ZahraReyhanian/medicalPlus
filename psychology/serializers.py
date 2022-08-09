@@ -6,22 +6,11 @@ from .models import Test, TestQuestion, TestResult
 class TestSerializer(serializers.ModelSerializer):
     access = serializers.SerializerMethodField()
 
-    def get_access(self, test: Test):
-        if test.type == 'free':
-            return True
+    def get_access(self, test: Test):      
+        if 'has_access' in self.context:
+            return self.context['has_access']
 
-        user_id = 0
-        if 'user_id' in self.context:
-            user_id = self.context['user_id']
-
-        if user_id == 0:
-            return False
-            
-        return UserAccessContent.objects.filter(
-                                    content_type=test.contentType, 
-                                    object_id=test.id,
-                                    user_id=user_id).exists()
-
+        return False
     class Meta:
         model = Test
         fields = ['id', 'slug', 'title', 'image', 'viewCount', 'description', 'body', 'slug', 'questions', 'type', 'price', 'answers', 'tags', 'contentType', 'access']
