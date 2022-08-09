@@ -10,13 +10,14 @@ class SymptomFormulaOptionInline(admin.StackedInline):
 class SymptomFormulaInline(admin.ModelAdmin):
     inlines = [SymptomFormulaOptionInline]
     list_display = ['id', 'symptom', 'result', 'sum']
-    search_fields = ['symptom']
+    search_fields = ['symptom__name']
     list_display_links = ['id']
 
 @admin.register(models.SymptomQuestionOption)
 class SymptomQuestionOptionAdmin(admin.ModelAdmin):
     list_display_links = ['id']
-    list_display = ['id', 'option']
+    list_display = ['id', 'option', 'gender']
+    list_editable = ['gender']
     search_fields = ['id', 'option']
 class SymptomQuestionOptionInline(admin.TabularInline):
     model = models.SymptomQuestionOption
@@ -27,7 +28,7 @@ class SymptomQuestionAdmin(admin.ModelAdmin):
     inlines = [SymptomQuestionOptionInline]
     list_display = ['id', 'symptom', 'question', 'gender']
     list_editable = ['gender']
-    search_fields = ['symptom', 'question', 'gender']
+    search_fields = ['symptom__name', 'question', 'gender']
     list_display_links = ['id']
 
 @admin.register(models.Symptom)
