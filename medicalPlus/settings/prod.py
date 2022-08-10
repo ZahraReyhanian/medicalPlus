@@ -5,7 +5,7 @@ DEBUG = False
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = ['medicalplus-prod.herokuapp.com']
+ALLOWED_HOSTS = ['medicalplus-prod.herokuapp.com', 'zahrarhn.pythonanywhere.com']
 
 DATABASES = {
     'default': {
