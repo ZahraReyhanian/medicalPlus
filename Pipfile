@@ -15,6 +15,7 @@ django-ckeditor = "*"
 pillow = "*"
 django-templated-mail = "*"
 gunicorn = "*"
+django-jalali-date = "*"
 
 [dev-packages]
 

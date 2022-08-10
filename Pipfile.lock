@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d3d306832ec2d5d5f0501a2022360db81f69f6acea547d757a2529e4d0a552be"
+            "sha256": "f4f7d4d270d2887b6a585c7168934c639d9b01eac992a5794afe9efd86a5cf6b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -183,6 +183,13 @@
             "index": "pypi",
             "version": "==3.5.0"
         },
+        "django-jalali-date": {
+            "hashes": [
+                "sha256:bb872f58c2b956fb49e26abec5d13753179bc30a7304424adb102672473c1f74"
+            ],
+            "index": "pypi",
+            "version": "==1.0.1"
+        },
         "django-js-asset": {
             "hashes": [
                 "sha256:86f9f300d682537ddaf0487dc2ab356581b8f50c069bdba91d334a46e449f923",
@@ -253,6 +260,14 @@
                 "sha256:af886f129dea4a2a1e3d36595a2d139589e4dd287f5cab0b40e799ee81570ff1"
             ],
             "version": "==1.2.0"
+        },
+        "jdatetime": {
+            "hashes": [
+                "sha256:085d367fa7a61d287e621c1b23456dc624b47c4825e79032b6be59aed0ad6d53",
+                "sha256:4a67a82ee57e35b5f6f9f7fbe6a0eda63f56ce1dd8af409b4c2a26a3340457db"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==4.1.0"
         },
         "jinja2": {
             "hashes": [
@@ -451,7 +466,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "social-auth-app-django": {
