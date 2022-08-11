@@ -16,6 +16,9 @@ pillow = "*"
 django-templated-mail = "*"
 gunicorn = "*"
 django-jalali-date = "*"
+django-cors-headers = "*"
+django-tinymce = "*"
+whitenoise = "*"
 
 [dev-packages]
 
