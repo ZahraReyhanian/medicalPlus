@@ -2,3 +2,5 @@
 /media/
 /static/
 general.log
+Pipfile
+Pipfile.lock
