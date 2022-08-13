@@ -20,15 +20,15 @@ from django.urls import path, include
 import debug_toolbar
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('psychology/', include('psychology.urls')),
-    path('articles/', include('article.urls')),
-    path('disease/', include('disease.urls')),
-    path('order/', include('order.urls')),
-    path('auth/', include('djoser.urls')),
+    path('api/admin/', admin.site.urls),
+    path('api/psychology/', include('psychology.urls')),
+    path('api/articles/', include('article.urls')),
+    path('api/disease/', include('disease.urls')),
+    path('api/order/', include('order.urls')),
+    path('api/auth/', include('djoser.urls')),
     path('api/', include('core.urls')),
-    path('tinymce/', include('tinymce.urls')),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('api/tinymce/', include('tinymce.urls')),
+    path('api/ckeditor/', include('ckeditor_uploader.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ] 
 
