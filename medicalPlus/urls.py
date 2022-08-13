@@ -26,7 +26,7 @@ urlpatterns = [
     path('api/disease/', include('disease.urls')),
     path('api/order/', include('order.urls')),
     path('api/auth/', include('djoser.urls')),
-    path('api/', include('core.urls')),
+    path('api/api/', include('core.urls')),
     path('api/tinymce/', include('tinymce.urls')),
     path('api/ckeditor/', include('ckeditor_uploader.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
