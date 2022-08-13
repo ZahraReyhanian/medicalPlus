@@ -47,7 +47,7 @@ class Test(models.Model):
     #todo change when deploy
     @property
     def redirectLink(self):
-        return f'http://localhost:3000/tests/{self.id}/questions'
+        return f'http://86.106.142.102/tests/{self.id}/questions'
 
 
 class TestResult(models.Model):

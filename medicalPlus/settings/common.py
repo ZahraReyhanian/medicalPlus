@@ -209,7 +209,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://medical-front.netlify.app"
 ]
 
-DOMAIN = 'localhost:3000'
+DOMAIN = '86.106.142.102'
 SITE_NAME = 'Medical Website'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
