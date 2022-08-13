@@ -13,7 +13,7 @@ X_API_KEY = "d9d94a3c-377a-4761-9757-a2c48e566b19"
 IDP_API_PAYMENT = "https://api.idpay.ir/v1.1/payment"
 IDP_API_VERIFY = "https://api.idpay.ir/v1.1/payment/verify"
 
-CallbackURL = 'http://86.106.142.102/order/verify/'
+CallbackURL = 'http://86.106.142.102/api/order/verify/'
 REDIRECT_URL_ERROR = 'http://86.106.142.102/payment/error'
 
 @api_view(['POST'])
