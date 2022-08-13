@@ -1,5 +1,6 @@
 *.pyc
 /static/
+/staticfiles/
 general.log
 Pipfile
 Pipfile.lock
